@@ -1,11 +1,14 @@
 import React from "react";
-import { signIn } from "../../../auth";
+import { auth, signIn } from "../../../auth";
 import { Field, Input, Checkbox, Label } from "@headlessui/react";
 import Link from "next/link";
 import { FaCheck } from "react-icons/fa6";
 import clsx from "clsx";
+import { redirect } from "next/navigation";
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const session = await auth();
+  if (session?.user) return redirect("/");
   return (
     <div className="fixed top-0 left-0 bg-white w-full h-screen">
       <div className="w-full h-full flex items-center justify-center p-6 lg:p-8">
@@ -50,7 +53,7 @@ export default function LoginPage() {
                 border-transparent ring-1 ring-black/10 focus-visible:border-blue-500"
               />
             </Field>
-            <div className="mt-4 flex items-center justify-between text-sm/5 font-semibold">
+            <div className="w-full mt-4 flex items-center justify-between text-sm/5 font-semibold">
               <Field className="flex items-center gap-x-2">
                 <Checkbox
                   name="remember-me"
@@ -64,13 +67,25 @@ export default function LoginPage() {
                 </Checkbox>
                 <Label>remember me</Label>
               </Field>
+              <Link href={"#"} className="font-medium hover:text-gray-600">
+                Forget Password
+              </Link>
+            </div>
+            <div className="mt-6">
+              <button
+                type="submit"
+                className="w-full px-4 py-2 bg-gray-400 hover:bg-black rounded-full 
+                text-lg font-semibold cursor-pointer hover:text-white duration-300 ease-in-out"
+              >
+                Sign in
+              </button>
             </div>
           </form>
           <div>
             <form
               action={async () => {
                 "use server";
-                await signIn("google");
+                await signIn("google", { callbackUrl: "/" });
               }}
             >
               <button

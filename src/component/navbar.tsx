@@ -4,16 +4,18 @@ import Link from "next/link";
 import { useState } from "react";
 import { FaBars, FaXmark } from "react-icons/fa6";
 import { motion } from "framer-motion";
+import { signOut, useSession } from "next-auth/react";
+import Image from "next/image";
 
 export const NavLinks = [
   { label: "", link: "/" },
   { label: "Blog", link: "/blog" },
   { label: "Company", link: "/company" },
   { label: "Contact", link: "/contact" },
-  { label: "Login", link: "/login" },
 ];
 
 export const DesktopIcon = () => {
+  const { data: session } = useSession();
   return (
     <div className="hidden lg:inline-flex items-center gap-1">
       {NavLinks?.map((item) => (
@@ -25,11 +27,37 @@ export const DesktopIcon = () => {
           {item?.label}
         </Link>
       ))}
+      <div>
+        {session?.user ? (
+          <button
+            onClick={() => signOut()}
+            className="cursor-pointer flex items-center gap-2 px-4 py-3
+          text-base font-semibold text-gray-950 hover:bg-blend-multiply hover:bg-red-600/[9.5%]"
+          >
+            <Image
+              src={session?.user.image as string}
+              alt="profileImage"
+              width={50}
+              height={50}
+              className="w-8 h-8 rounded-full object-cover"
+            />
+            <p>{session?.user?.name}</p>
+          </button>
+        ) : (
+          <Link
+            href={"/login"}
+            className="text-lg font-semibold px-4 py-2 hover:bg-amber-600/10 "
+          >
+            Login
+          </Link>
+        )}
+      </div>
     </div>
   );
 };
 
 export const MobileNavigation = () => {
+  const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const handleHamburger = () => {
     setIsOpen(!isOpen);
@@ -79,6 +107,30 @@ export const MobileNavigation = () => {
                   </Link>
                 </motion.div>
               ))}
+              <div>
+                {session?.user ? (
+                  <button
+                    onClick={() => signOut()}
+                    className="cursor-pointer flex items-center gap-2 text-base font-semibold text-white "
+                  >
+                    <Image
+                      src={session?.user.image as string}
+                      alt="profileImage"
+                      width={50}
+                      height={50}
+                      className="w-8 h-8 rounded-full object-cover"
+                    />
+                    <p>{session?.user?.name}</p>
+                  </button>
+                ) : (
+                  <Link
+                    href={"/login"}
+                    className="hover:text-blue-500 hover:border-b border-b-gray-300 w-full duration-300"
+                  >
+                    Login
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -89,7 +141,7 @@ export const MobileNavigation = () => {
 
 export default function navbar() {
   return (
-    <div className="w-full h-20 border-b border-b-gray-200">
+    <div className="w-full h-20">
       <Container className="h-full flex items-center justify-between gap-1">
         <Link
           href={"/"}
