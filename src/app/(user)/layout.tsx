@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "../globals.css";
 import { SessionProvider } from "next-auth/react";
+import Container from "@/component/container";
+import Navbar from "@/component/navbar";
 
 export const metadata: Metadata = {
   title: "My-Blog",
@@ -14,16 +16,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <head>
-        <link
-          rel="stylesheet"
-          href="https://api.fontshare.com/css?f%5B%5D=switzer@400,500,600,700&amp;display=swap"
-        />
-      </head>
-      <body>
-        <SessionProvider>{children}</SessionProvider>
-      </body>
-    </html>
+    <>
+      <SessionProvider>
+        <Container className="h-20 flex items-center justify-between gap-5">
+          <Navbar />
+        </Container>
+        {children}
+      </SessionProvider>
+    </>
   );
 }

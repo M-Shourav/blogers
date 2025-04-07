@@ -139,7 +139,7 @@ export const MobileNavigation = () => {
   );
 };
 
-export default function navbar() {
+export default function Navbar() {
   return (
     <div className="w-full h-20">
       <Container className="h-full flex items-center justify-between gap-1">
