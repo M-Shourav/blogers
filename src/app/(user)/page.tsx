@@ -3,7 +3,7 @@ import Featured from "@/component/featured";
 
 export default function Home() {
   return (
-    <div>
+    <div className="mb-40">
       <Banner />
       <Featured />
     </div>

@@ -58,8 +58,8 @@ export const postType = defineType({
       initialValue: false,
     }),
     defineField({
-      name: "expert",
-      title: "Expert",
+      name: "excerpt",
+      title: "Excerpt",
       type: "text",
     }),
   ],
