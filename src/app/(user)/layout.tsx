@@ -18,9 +18,9 @@ export default function RootLayout({
   return (
     <>
       <SessionProvider>
-        <Container className="h-20 flex items-center justify-between gap-5">
+        <div className="h-20 flex items-center justify-between gap-5">
           <Navbar />
-        </Container>
+        </div>
         {children}
       </SessionProvider>
     </>

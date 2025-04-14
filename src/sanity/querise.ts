@@ -19,3 +19,22 @@ export const getFeaturedPosts = async (quantity: number) => {
     params: { quantity },
   });
 };
+
+export const GET_POSTS_QUERY =
+  defineQuery(`*[_type=='post'] | order(publishedAt desc)[0...$quantity]{
+  title,
+  'slug':slug.current,
+  publishedAt,
+  mainImage,
+  excerpt,
+  author->{
+      name, image
+  }
+}`);
+
+export const getAllPosts = async (quantity: number) => {
+  return await clientFetch({
+    query: GET_POSTS_QUERY,
+    params: { quantity },
+  });
+};

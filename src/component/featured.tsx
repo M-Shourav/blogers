@@ -13,7 +13,7 @@ export default async function Featured() {
   }
   return (
     <div>
-      <Container>
+      <div>
         <h2 className="text-2xl lg:text-3xl font-semibold tracking-wide">
           My Featured Post
         </h2>
@@ -70,7 +70,7 @@ export default async function Featured() {
             </div>
           ))}
         </div>
-      </Container>
+      </div>
     </div>
   );
 }

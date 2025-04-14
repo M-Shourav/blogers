@@ -135,7 +135,7 @@ export type Post = {
     _key: string;
   }>;
   isFeatured?: boolean;
-  expert?: string;
+  excerpt?: string;
 };
 
 export type Author = {
@@ -306,7 +306,43 @@ export type FEATURED_POSTS_QUERYResult = Array<{
     alt?: string;
     _type: "image";
   } | null;
-  excerpt: null;
+  excerpt: string | null;
+  author: {
+    name: string | null;
+    image: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    } | null;
+  } | null;
+}>;
+// Variable: GET_POSTS_QUERY
+// Query: *[_type=='post'] | order(publishedAt desc)[0...$quantity]{  title,  'slug':slug.current,  publishedAt,  mainImage,  excerpt,  author->{      name, image  }}
+export type GET_POSTS_QUERYResult = Array<{
+  title: string | null;
+  slug: string | null;
+  publishedAt: string | null;
+  mainImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  } | null;
+  excerpt: string | null;
   author: {
     name: string | null;
     image: {
@@ -329,5 +365,6 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     "*[_type=='post' && isFeatured==true] | order(publishedAt desc)[0...$quantity]{\n    title,\n    'slug':slug.current,\n    publishedAt,\n    mainImage,\n    excerpt,\n    author->{\n        name, image\n    }\n}": FEATURED_POSTS_QUERYResult;
+    "*[_type=='post'] | order(publishedAt desc)[0...$quantity]{\n  title,\n  'slug':slug.current,\n  publishedAt,\n  mainImage,\n  excerpt,\n  author->{\n      name, image\n  }\n}": GET_POSTS_QUERYResult;
   }
 }

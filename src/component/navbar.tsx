@@ -63,7 +63,7 @@ export const MobileNavigation = () => {
     setIsOpen(!isOpen);
   };
   return (
-    <div className="lg:hidden">
+    <div className="lg:hidden z-50">
       <button
         onClick={handleHamburger}
         className="text-2xl px-4 py-2 hover:bg-black/5 rounded-md
