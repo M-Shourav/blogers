@@ -38,3 +38,15 @@ export const getAllPosts = async (quantity: number) => {
     params: { quantity },
   });
 };
+
+export const CATEGORIES_QUERY =
+  defineQuery(`*[_type=="category"]|order(title asc){
+  title,
+  'slug':slug.current
+}`);
+
+export const getAllCategories = async () => {
+  return await clientFetch({
+    query: CATEGORIES_QUERY,
+  });
+};

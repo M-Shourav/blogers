@@ -359,6 +359,12 @@ export type GET_POSTS_QUERYResult = Array<{
     } | null;
   } | null;
 }>;
+// Variable: CATEGORIES_QUERY
+// Query: *[_type=="category"]|order(title asc){  title,  'slug':slug.current}
+export type CATEGORIES_QUERYResult = Array<{
+  title: string | null;
+  slug: string | null;
+}>;
 
 // Query TypeMap
 import "@sanity/client";
@@ -366,5 +372,6 @@ declare module "@sanity/client" {
   interface SanityQueries {
     "*[_type=='post' && isFeatured==true] | order(publishedAt desc)[0...$quantity]{\n    title,\n    'slug':slug.current,\n    publishedAt,\n    mainImage,\n    excerpt,\n    author->{\n        name, image\n    }\n}": FEATURED_POSTS_QUERYResult;
     "*[_type=='post'] | order(publishedAt desc)[0...$quantity]{\n  title,\n  'slug':slug.current,\n  publishedAt,\n  mainImage,\n  excerpt,\n  author->{\n      name, image\n  }\n}": GET_POSTS_QUERYResult;
+    "*[_type==\"category\"]|order(title asc){\n  title,\n  'slug':slug.current\n}": CATEGORIES_QUERYResult;
   }
 }
