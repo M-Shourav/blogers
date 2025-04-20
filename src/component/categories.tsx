@@ -33,7 +33,7 @@ export default async function Categories() {
           {categories?.map((category) => (
             <MenuItem key={category?.slug}>
               <Link
-                href={`/categories/${category?.slug}`}
+                href={`/category/${category?.slug}`}
                 className="grid grid-cols-[1rem,1fr] items-center gap-2 rounded-md px-3 py-2 data-[focus]:bg-gray-950/5"
               >
                 <p className="col-start-2 text-sm/6">{category?.title}</p>

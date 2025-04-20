@@ -68,6 +68,37 @@ export type Geopoint = {
   alt?: number;
 };
 
+export type Comment = {
+  _id: string;
+  _type: "comment";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: string;
+  approved?: boolean;
+  email?: string;
+  comment?: string;
+  post?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "post";
+  };
+  imageUrl?: string;
+  image?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+};
+
 export type Post = {
   _id: string;
   _type: "post";
@@ -284,7 +315,7 @@ export type SanityImageMetadata = {
   isOpaque?: boolean;
 };
 
-export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Post | Author | Category | Slug | BlockContent | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata;
+export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Comment | Post | Author | Category | Slug | BlockContent | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./src/sanity/querise.ts
 // Variable: FEATURED_POSTS_QUERY
@@ -365,6 +396,95 @@ export type CATEGORIES_QUERYResult = Array<{
   title: string | null;
   slug: string | null;
 }>;
+// Variable: GET_SINGLEPOST_QUERY
+// Query: *[_type=="post" && slug.current==$slug][0]{  publishedAt,  title,  mainImage,  excerpt,  body,  _id,  author->{    name,    image,  },  categories[]->{    title,    'slug':slug.current  },  "comments":*[_type=="comment" && post._ref==^._id && approved==true]{    name,    email,    comment,    image,    _id  }}
+export type GET_SINGLEPOST_QUERYResult = {
+  publishedAt: string | null;
+  title: string | null;
+  mainImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  } | null;
+  excerpt: string | null;
+  body: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
+    listItem?: "bullet";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  } | {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+    _key: string;
+  }> | null;
+  _id: string;
+  author: {
+    name: string | null;
+    image: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    } | null;
+  } | null;
+  categories: Array<{
+    title: string | null;
+    slug: string | null;
+  }> | null;
+  comments: Array<{
+    name: string | null;
+    email: string | null;
+    comment: string | null;
+    image: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    } | null;
+    _id: string;
+  }>;
+} | null;
 
 // Query TypeMap
 import "@sanity/client";
@@ -373,5 +493,6 @@ declare module "@sanity/client" {
     "*[_type=='post' && isFeatured==true] | order(publishedAt desc)[0...$quantity]{\n    title,\n    'slug':slug.current,\n    publishedAt,\n    mainImage,\n    excerpt,\n    author->{\n        name, image\n    }\n}": FEATURED_POSTS_QUERYResult;
     "*[_type=='post'] | order(publishedAt desc)[0...$quantity]{\n  title,\n  'slug':slug.current,\n  publishedAt,\n  mainImage,\n  excerpt,\n  author->{\n      name, image\n  }\n}": GET_POSTS_QUERYResult;
     "*[_type==\"category\"]|order(title asc){\n  title,\n  'slug':slug.current\n}": CATEGORIES_QUERYResult;
+    "*[_type==\"post\" && slug.current==$slug][0]{\n  publishedAt,\n  title,\n  mainImage,\n  excerpt,\n  body,\n  _id,\n  author->{\n    name,\n    image,\n  },\n  categories[]->{\n    title,\n    'slug':slug.current\n  },\n  \"comments\":*[_type==\"comment\" && post._ref==^._id && approved==true]{\n    name,\n    email,\n    comment,\n    image,\n    _id\n  }\n}": GET_SINGLEPOST_QUERYResult;
   }
 }

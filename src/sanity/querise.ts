@@ -50,3 +50,35 @@ export const getAllCategories = async () => {
     query: CATEGORIES_QUERY,
   });
 };
+
+export const GET_SINGLEPOST_QUERY =
+  defineQuery(`*[_type=="post" && slug.current==$slug][0]{
+  publishedAt,
+  title,
+  mainImage,
+  excerpt,
+  body,
+  _id,
+  author->{
+    name,
+    image,
+  },
+  categories[]->{
+    title,
+    'slug':slug.current
+  },
+  "comments":*[_type=="comment" && post._ref==^._id && approved==true]{
+    name,
+    email,
+    comment,
+    image,
+    _id
+  }
+}`);
+
+export const getSinglePost = async (slug: string) => {
+  return await clientFetch({
+    query: GET_SINGLEPOST_QUERY,
+    params: { slug },
+  });
+};
