@@ -82,3 +82,26 @@ export const getSinglePost = async (slug: string) => {
     params: { slug },
   });
 };
+
+const CATEGORY_POST = defineQuery(`*[
+  _type == "post"
+  && select(defined($category) => $category in categories[]->slug.current, true)
+]|order(publishedAt desc){
+  title,
+  "slug": slug.current,
+  publishedAt,
+  excerpt,
+  author->{
+    name,
+    image,
+  },
+}`);
+
+export const getCategoryPost = async (category?: string) => {
+  return await clientFetch({
+    query: CATEGORY_POST,
+    params: {
+      category,
+    },
+  });
+};

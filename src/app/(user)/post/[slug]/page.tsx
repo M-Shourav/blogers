@@ -195,6 +195,7 @@ export default async function SinglePostPage({
                 </div>
               </div>
             </div>
+            <div className="mt-10">comments</div>
           </div>
         </div>
       </Container>
