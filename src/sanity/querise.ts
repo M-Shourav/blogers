@@ -20,7 +20,7 @@ export const getFeaturedPosts = async (quantity: number) => {
   });
 };
 
-export const GET_POSTS_QUERY =
+const GET_POSTS_QUERY =
   defineQuery(`*[_type=='post'] | order(publishedAt desc)[0...$quantity]{
   title,
   'slug':slug.current,
@@ -39,8 +39,7 @@ export const getAllPosts = async (quantity: number) => {
   });
 };
 
-export const CATEGORIES_QUERY =
-  defineQuery(`*[_type=="category"]|order(title asc){
+const CATEGORIES_QUERY = defineQuery(`*[_type=="category"]|order(title asc){
   title,
   'slug':slug.current
 }`);
@@ -50,8 +49,7 @@ export const getAllCategories = async () => {
     query: CATEGORIES_QUERY,
   });
 };
-
-export const GET_SINGLEPOST_QUERY =
+const GET_SINGLEPOST_QUERY =
   defineQuery(`*[_type=="post" && slug.current==$slug][0]{
   publishedAt,
   title,
@@ -103,5 +101,33 @@ export const getCategoryPost = async (category?: string) => {
     params: {
       category,
     },
+  });
+};
+
+const GET_OTHER_POST_QUERY = defineQuery(`*[
+  _type=="post"
+   && defined(slug.current)
+   && slug.current !=$currentSlug
+    ]| order(publishedAt desc)[0...$quantity]{
+      publishedAt,
+  title,
+  mainImage,
+  excerpt,
+  body,
+  slug,
+  author->{
+    name,
+    image,
+  },
+  categories[]->{
+    title,
+    "slug": slug.current,
+  }
+    }`);
+
+export const getOtherPosts = async (currentSlug: string, quantity: number) => {
+  return await clientFetch({
+    query: GET_OTHER_POST_QUERY,
+    params: { currentSlug, quantity },
   });
 };

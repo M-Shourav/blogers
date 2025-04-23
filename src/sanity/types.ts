@@ -485,6 +485,100 @@ export type GET_SINGLEPOST_QUERYResult = {
     _id: string;
   }>;
 } | null;
+// Variable: CATEGORY_POST
+// Query: *[  _type == "post"  && select(defined($category) => $category in categories[]->slug.current, true)]|order(publishedAt desc){  title,  "slug": slug.current,  publishedAt,  excerpt,  author->{    name,    image,  },}
+export type CATEGORY_POSTResult = Array<{
+  title: string | null;
+  slug: string | null;
+  publishedAt: string | null;
+  excerpt: string | null;
+  author: {
+    name: string | null;
+    image: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    } | null;
+  } | null;
+}>;
+// Variable: GET_OTHER_POST_QUERY
+// Query: *[  _type=="post"   && defined(slug.current)   && slug.current !=$currentSlug    ]| order(publishedAt desc)[0...$quantity]{      publishedAt,  title,  mainImage,  excerpt,  body,  slug,  author->{    name,    image,  },  categories[]->{    title,    "slug": slug.current,  }    }
+export type GET_OTHER_POST_QUERYResult = Array<{
+  publishedAt: string | null;
+  title: string | null;
+  mainImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  } | null;
+  excerpt: string | null;
+  body: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
+    listItem?: "bullet";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  } | {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+    _key: string;
+  }> | null;
+  slug: Slug | null;
+  author: {
+    name: string | null;
+    image: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    } | null;
+  } | null;
+  categories: Array<{
+    title: string | null;
+    slug: string | null;
+  }> | null;
+}>;
 
 // Query TypeMap
 import "@sanity/client";
@@ -494,5 +588,7 @@ declare module "@sanity/client" {
     "*[_type=='post'] | order(publishedAt desc)[0...$quantity]{\n  title,\n  'slug':slug.current,\n  publishedAt,\n  mainImage,\n  excerpt,\n  author->{\n      name, image\n  }\n}": GET_POSTS_QUERYResult;
     "*[_type==\"category\"]|order(title asc){\n  title,\n  'slug':slug.current\n}": CATEGORIES_QUERYResult;
     "*[_type==\"post\" && slug.current==$slug][0]{\n  publishedAt,\n  title,\n  mainImage,\n  excerpt,\n  body,\n  _id,\n  author->{\n    name,\n    image,\n  },\n  categories[]->{\n    title,\n    'slug':slug.current\n  },\n  \"comments\":*[_type==\"comment\" && post._ref==^._id && approved==true]{\n    name,\n    email,\n    comment,\n    image,\n    _id\n  }\n}": GET_SINGLEPOST_QUERYResult;
+    "*[\n  _type == \"post\"\n  && select(defined($category) => $category in categories[]->slug.current, true)\n]|order(publishedAt desc){\n  title,\n  \"slug\": slug.current,\n  publishedAt,\n  excerpt,\n  author->{\n    name,\n    image,\n  },\n}": CATEGORY_POSTResult;
+    "*[\n  _type==\"post\"\n   && defined(slug.current)\n   && slug.current !=$currentSlug\n    ]| order(publishedAt desc)[0...$quantity]{\n      publishedAt,\n  title,\n  mainImage,\n  excerpt,\n  body,\n  slug,\n  author->{\n    name,\n    image,\n  },\n  categories[]->{\n    title,\n    \"slug\": slug.current,\n  }\n    }": GET_OTHER_POST_QUERYResult;
   }
 }

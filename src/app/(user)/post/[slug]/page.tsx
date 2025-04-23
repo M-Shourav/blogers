@@ -1,6 +1,7 @@
 import Container from "@/component/container";
+import OtherPost from "@/component/otherPost";
 import { urlFor } from "@/sanity/lib/image";
-import { getSinglePost } from "@/sanity/querise";
+import { getOtherPosts, getSinglePost } from "@/sanity/querise";
 import dayjs from "dayjs";
 import { PortableText } from "next-sanity";
 import Image from "next/image";
@@ -8,7 +9,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import React from "react";
 import { FaChevronLeft } from "react-icons/fa6";
-import { LuChevronsLeft } from "react-icons/lu";
 
 export default async function SinglePostPage({
   params,
@@ -17,6 +17,7 @@ export default async function SinglePostPage({
 }) {
   const { slug } = await params;
   const post = (await getSinglePost(slug)) || notFound();
+  const othersPosts = await getOtherPosts(slug, 3);
   return (
     <div className=" overflow-hidden">
       <Container className="mt-16">
@@ -199,6 +200,7 @@ export default async function SinglePostPage({
           </div>
         </div>
       </Container>
+      <OtherPost othersPosts={othersPosts} />
     </div>
   );
 }
