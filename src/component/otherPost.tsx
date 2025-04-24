@@ -11,8 +11,6 @@ export default async function OtherPost({
 }: {
   othersPosts: GET_OTHER_POST_QUERYResult;
 }) {
-  console.log(othersPosts);
-
   return (
     <Container className="mb-10">
       <p className="text-xl font-semibold mb-5">You may also like</p>

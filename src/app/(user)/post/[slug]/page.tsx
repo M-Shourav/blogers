@@ -1,5 +1,6 @@
 import Container from "@/component/container";
 import OtherPost from "@/component/otherPost";
+import WriteComments from "@/component/write-comments";
 import { urlFor } from "@/sanity/lib/image";
 import { getOtherPosts, getSinglePost } from "@/sanity/querise";
 import dayjs from "dayjs";
@@ -196,7 +197,30 @@ export default async function SinglePostPage({
                 </div>
               </div>
             </div>
-            <div className="mt-10">comments</div>
+            <div className="mt-10 max-w-2xl">
+              <WriteComments _id={post?._id} />
+              {post?.comments?.length > 0 && (
+                <div className="p-5">
+                  <div
+                    className="p-10 w-full max-w-2xl mx-auto rounded-2xl shadow-rose-600
+                   shadow flex flex-col space-y-2"
+                  >
+                    <h3 className="text-4xl font-semibold">Comments</h3>
+                    <hr className="pb-2" />
+                    {post?.comments?.map((comment) => (
+                      <div key={comment?._id}>
+                        <p>
+                          <span className="text-blue-600 font-semibold">
+                            {comment?.name}
+                          </span>
+                          : {comment?.comment}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </Container>
