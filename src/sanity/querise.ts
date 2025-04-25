@@ -65,7 +65,7 @@ const GET_SINGLEPOST_QUERY =
     title,
     'slug':slug.current
   },
-  "comments":*[_type=="comment" && post._ref==^._id && approved==true]{
+  "comments": *[_type== "comment" && post._ref==^._id && approved==true]{
     name,
     email,
     comment,

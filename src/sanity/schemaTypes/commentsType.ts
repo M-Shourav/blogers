@@ -12,10 +12,11 @@ export const commentsType = defineType({
       type: "string",
     }),
     defineField({
-      title: "Approved",
       name: "approved",
+      title: "Approved",
       type: "boolean",
-      description: "comments won't show on the site without approved",
+      description: "Comments won't show on the site without approval",
+      initialValue: false,
     }),
     defineField({
       name: "email",
@@ -31,9 +32,9 @@ export const commentsType = defineType({
       to: [{ type: "post" }],
     }),
     defineField({
-      name: "imageUrl",
+      name: "ImageURL",
       type: "string",
-      title: "User Image link",
+      title: "User image link",
     }),
     defineField({
       name: "image",
@@ -43,6 +44,7 @@ export const commentsType = defineType({
       },
     }),
   ],
+
   preview: {
     select: {
       title: "name",
@@ -50,10 +52,10 @@ export const commentsType = defineType({
       approved: "approved",
       media: "image",
     },
-    prepare({ title, email, approved, media }) {
+    prepare({ title, approved, email, media }) {
       return {
         title,
-        subtitle: `${approved ? "approved" : "In Review"} | User: ${email}`,
+        subtitle: `${approved ? "Approved" : "In review"} | User: ${email}`,
         media: media ? media : CommentIcon,
       };
     },
