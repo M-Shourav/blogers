@@ -1,5 +1,4 @@
 import React from "react";
-import Container from "./container";
 import { getFeaturedPosts } from "@/sanity/querise";
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
